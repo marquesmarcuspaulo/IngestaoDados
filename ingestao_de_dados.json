@@ -1,0 +1,714 @@
+{
+	"jobConfig": {
+		"name": "ingestao_de_dados",
+		"description": "",
+		"role": "arn:aws:iam::218606466161:role/LabRole",
+		"command": "glueetl",
+		"version": "4.0",
+		"runtime": null,
+		"workerType": "G.1X",
+		"numberOfWorkers": 10,
+		"maxCapacity": 10,
+		"maxRetries": 0,
+		"timeout": 2880,
+		"maxConcurrentRuns": 1,
+		"security": "none",
+		"scriptName": "ingestao_de_dados.py",
+		"scriptLocation": "s3://aws-glue-assets-218606466161-us-east-1/scripts/",
+		"language": "python-3",
+		"jobParameters": [],
+		"tags": [],
+		"jobMode": "VISUAL_MODE",
+		"createdOn": "2023-08-08T01:53:05.491Z",
+		"developerMode": false,
+		"connectionsList": [],
+		"temporaryDirectory": "s3://aws-glue-assets-218606466161-us-east-1/temporary/",
+		"logging": true,
+		"glueHiveMetastore": true,
+		"etlAutoTuning": false,
+		"metrics": true,
+		"spark": true,
+		"dependentPath": "",
+		"pythonPath": "",
+		"bookmark": "job-bookmark-disable",
+		"sparkPath": "s3://aws-glue-assets-218606466161-us-east-1/sparkHistoryLogs/",
+		"flexExecution": false,
+		"minFlexWorkers": null
+	},
+	"dag": {
+		"node-1691379698799": {
+			"nodeId": "node-1691379698799",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691379132943"
+			],
+			"name": "Data Preparation Recipe",
+			"generatedNodeName": "DataPreparationRecipe_node1691379698799",
+			"classification": "Transform",
+			"type": "Recipe",
+			"recipeReference": {
+				"recipeArn": "arn:aws:databrew:us-east-1:218606466161:recipe/bancos-recipe",
+				"recipeVersion": "1.0"
+			},
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691381331613": {
+			"nodeId": "node-1691381331613",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691379087889",
+				"node-1691379698799"
+			],
+			"name": "Join",
+			"generatedNodeName": "Join_node1691381331613",
+			"classification": "Transform",
+			"type": "Join",
+			"joinType": "equijoin",
+			"columns": [
+				{
+					"from": "node-1691379087889",
+					"keys": [
+						"Nome"
+					]
+				},
+				{
+					"from": "node-1691379698799",
+					"keys": [
+						"Nome"
+					]
+				}
+			],
+			"columnConditions": [
+				"="
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691379087889": {
+			"nodeId": "node-1691379087889",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691378728974"
+			],
+			"name": "Drop Fields",
+			"generatedNodeName": "DropFields_node1691379087889",
+			"classification": "Transform",
+			"type": "DropFields",
+			"paths": [],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691381615792": {
+			"nodeId": "node-1691381615792",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691381331613"
+			],
+			"name": "Drop Fields",
+			"generatedNodeName": "DropFields_node1691381615792",
+			"classification": "Transform",
+			"type": "DropFields",
+			"paths": [
+				"`.Nome`"
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691379132943": {
+			"nodeId": "node-1691379132943",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "Bancos",
+			"generatedNodeName": "Bancos_node1691379132943",
+			"classification": "DataSource",
+			"type": "S3",
+			"isCatalog": false,
+			"format": "csv",
+			"paths": [
+				"s3://218606466161-entrada/Dados/Bancos/EnquadramentoInicia_v2.tsv"
+			],
+			"compressionType": null,
+			"exclusions": [],
+			"groupFiles": null,
+			"groupSize": null,
+			"recurse": true,
+			"maxBand": null,
+			"maxFilesInBand": null,
+			"additionalOptions": {
+				"boundedSize": null,
+				"boundedFiles": null,
+				"enableSamplePath": false,
+				"samplePath": "s3://218606466161-entrada/Dados/Bancos/EnquadramentoInicia_v2.tsv",
+				"boundedOption": null
+			},
+			"separator": "\t",
+			"escaper": "",
+			"quoteChar": "\"",
+			"multiline": null,
+			"withHeader": true,
+			"writeHeader": null,
+			"skipFirst": null,
+			"optimizePerformance": false,
+			"outputSchemas": [
+				[
+					{
+						"key": "Segmento",
+						"fullPath": [
+							"Segmento"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "CNPJ",
+						"fullPath": [
+							"CNPJ"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Nome",
+						"fullPath": [
+							"Nome"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					}
+				]
+			],
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691376340618": {
+			"nodeId": "node-1691376340618",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691376024837"
+			],
+			"name": "Aggregate-empregados",
+			"generatedNodeName": "Aggregateempregados_node1691376340618",
+			"classification": "Transform",
+			"type": "Aggregate",
+			"parentsValid": true,
+			"calculatedType": "",
+			"groups": [
+				"Nome"
+			],
+			"aggs": [
+				{
+					"column": "Perspectiva positiva da empresa(%)",
+					"aggFunc": "avg"
+				},
+				{
+					"column": "Remuneração e benefícios",
+					"aggFunc": "avg"
+				}
+			],
+			"codeGenVersion": 2
+		},
+		"node-1691378728974": {
+			"nodeId": "node-1691378728974",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [
+				"node-1691376340618"
+			],
+			"name": "output-empregados",
+			"generatedNodeName": "outputempregados_node1691378728974",
+			"classification": "Transform",
+			"type": "ApplyMapping",
+			"mapping": [
+				{
+					"toKey": "Nome",
+					"fromPath": [
+						"Nome"
+					],
+					"toType": "string",
+					"fromType": "string",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "Satisfação Empregado",
+					"fromPath": [
+						"avg(Perspectiva positiva da empresa(%))"
+					],
+					"toType": "double",
+					"fromType": "double",
+					"dropped": false,
+					"children": null
+				},
+				{
+					"toKey": "Satisfação Salário",
+					"fromPath": [
+						"avg(Remuneração e benefícios)"
+					],
+					"toType": "double",
+					"fromType": "double",
+					"dropped": false,
+					"children": null
+				}
+			],
+			"parentsValid": true,
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691376024837": {
+			"nodeId": "node-1691376024837",
+			"dataPreview": false,
+			"previewAmount": 0,
+			"inputs": [],
+			"name": "empregados",
+			"generatedNodeName": "empregados_node1691376024837",
+			"classification": "DataSource",
+			"type": "S3",
+			"isCatalog": false,
+			"format": "csv",
+			"paths": [
+				"s3://218606466161-entrada/Dados/Empregados/"
+			],
+			"compressionType": null,
+			"exclusions": [],
+			"groupFiles": null,
+			"groupSize": null,
+			"recurse": true,
+			"maxBand": null,
+			"maxFilesInBand": null,
+			"additionalOptions": {
+				"boundedSize": null,
+				"boundedFiles": null,
+				"enableSamplePath": false,
+				"samplePath": "s3://218606466161-entrada/Dados/Empregados/glassdoor_consolidado_join_match_less_v2.csv",
+				"boundedOption": null
+			},
+			"separator": "|",
+			"escaper": "",
+			"quoteChar": "\"",
+			"multiline": null,
+			"withHeader": true,
+			"writeHeader": null,
+			"skipFirst": null,
+			"outputSchemas": [
+				[
+					{
+						"key": "employer_name",
+						"fullPath": [
+							"employer_name"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "reviews_count",
+						"fullPath": [
+							"reviews_count"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "culture_count",
+						"fullPath": [
+							"culture_count"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "salaries_count",
+						"fullPath": [
+							"salaries_count"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "benefits_count",
+						"fullPath": [
+							"benefits_count"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "employer-website",
+						"fullPath": [
+							"employer-website"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "employer-headquarters",
+						"fullPath": [
+							"employer-headquarters"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "employer-founded",
+						"fullPath": [
+							"employer-founded"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "employer-industry",
+						"fullPath": [
+							"employer-industry"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "employer-revenue",
+						"fullPath": [
+							"employer-revenue"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "url",
+						"fullPath": [
+							"url"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Geral",
+						"fullPath": [
+							"Geral"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Cultura e valores",
+						"fullPath": [
+							"Cultura e valores"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Diversidade e inclusão",
+						"fullPath": [
+							"Diversidade e inclusão"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Qualidade de vida",
+						"fullPath": [
+							"Qualidade de vida"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Alta liderança",
+						"fullPath": [
+							"Alta liderança"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Remuneração e benefícios",
+						"fullPath": [
+							"Remuneração e benefícios"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Oportunidades de carreira",
+						"fullPath": [
+							"Oportunidades de carreira"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Recomendam para outras pessoas(%)",
+						"fullPath": [
+							"Recomendam para outras pessoas(%)"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Perspectiva positiva da empresa(%)",
+						"fullPath": [
+							"Perspectiva positiva da empresa(%)"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "CNPJ",
+						"fullPath": [
+							"CNPJ"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "Nome",
+						"fullPath": [
+							"Nome"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					},
+					{
+						"key": "match_percent",
+						"fullPath": [
+							"match_percent"
+						],
+						"type": "string",
+						"glueStudioType": null,
+						"children": null
+					}
+				]
+			],
+			"calculatedType": "",
+			"codeGenVersion": 2
+		},
+		"node-1691546554822": {
+			"classification": "DataSource",
+			"type": "S3",
+			"name": "reclamações",
+			"inputs": [],
+			"isCatalog": false,
+			"recurse": true,
+			"paths": [
+				"s3://218606466161-entrada/Dados/Reclamações/"
+			],
+			"additionalOptions": {
+				"enableSamplePath": false,
+				"samplePath": "s3://218606466161-entrada/Dados/Reclamações/2021_tri_01.csv"
+			},
+			"inferSchemaChanged": false,
+			"format": "csv",
+			"generatedNodeName": "reclamaes_node1691546554822",
+			"codeGenVersion": 2,
+			"outputSchemas": [
+				[]
+			],
+			"separator": ";",
+			"quoteChar": "\"",
+			"withHeader": true,
+			"escaper": ""
+		},
+		"node-1691546868059": {
+			"classification": "Transform",
+			"type": "Recipe",
+			"name": "Data Preparation Recipe",
+			"inputs": [
+				"node-1691546554822"
+			],
+			"recipeReference": {
+				"recipeVersion": "1.0",
+				"recipeArn": "arn:aws:databrew:us-east-1:218606466161:recipe/clientes-reclamacoes-recipe"
+			},
+			"generatedNodeName": "DataPreparationRecipe_node1691546868059",
+			"codeGenVersion": 2,
+			"outputSchemas": [
+				[
+					{
+						"key": "cnpj",
+						"fullPath": [
+							"cnpj"
+						],
+						"type": "string"
+					},
+					{
+						"key": "nome",
+						"fullPath": [
+							"nome"
+						],
+						"type": "string"
+					},
+					{
+						"key": "índice",
+						"fullPath": [
+							"índice"
+						],
+						"type": "string"
+					},
+					{
+						"key": "quantidade total de reclamações",
+						"fullPath": [
+							"quantidade total de reclamações"
+						],
+						"type": "string"
+					},
+					{
+						"key": "quantidade total de clientes – ccs e scr",
+						"fullPath": [
+							"quantidade total de clientes – ccs e scr"
+						],
+						"type": "string"
+					},
+					{
+						"key": "col14",
+						"fullPath": [
+							"col14"
+						],
+						"type": "string"
+					}
+				]
+			]
+		},
+		"node-1691547347505": {
+			"classification": "Transform",
+			"type": "Aggregate",
+			"name": "Aggregate",
+			"inputs": [
+				"node-1691546868059"
+			],
+			"groups": [
+				"nome"
+			],
+			"aggs": [
+				{
+					"column": "índice",
+					"aggFunc": "min"
+				},
+				{
+					"column": "quantidade total de reclamações",
+					"aggFunc": "sum"
+				},
+				{
+					"column": "quantidade total de clientes – ccs e scr",
+					"aggFunc": "avg"
+				}
+			],
+			"generatedNodeName": "Aggregate_node1691547347505",
+			"codeGenVersion": 2
+		},
+		"node-1691547451027": {
+			"classification": "Transform",
+			"type": "Join",
+			"name": "Join",
+			"inputs": [
+				"node-1691547347505",
+				"node-1691381615792"
+			],
+			"joinType": "equijoin",
+			"columns": [
+				{
+					"from": "node-1691547347505",
+					"keys": [
+						"nome"
+					]
+				},
+				{
+					"from": "node-1691381615792",
+					"keys": [
+						"Nome"
+					]
+				}
+			],
+			"columnConditions": [
+				"="
+			],
+			"generatedNodeName": "Join_node1691547451027",
+			"codeGenVersion": 2
+		},
+		"node-1691547804016": {
+			"classification": "Transform",
+			"type": "RenameField",
+			"name": "Rename Field",
+			"inputs": [
+				"node-1691547451027"
+			],
+			"sourcePath": "min(índice)",
+			"targetPath": "Índice",
+			"generatedNodeName": "RenameField_node1691547804016",
+			"codeGenVersion": 2
+		},
+		"node-1691547878211": {
+			"classification": "Transform",
+			"type": "RenameField",
+			"name": "Rename Field",
+			"inputs": [
+				"node-1691547804016"
+			],
+			"sourcePath": "sum(quantidade total de reclamações)",
+			"targetPath": "QuantidadeTotaldeReclamações",
+			"generatedNodeName": "RenameField_node1691547878211",
+			"codeGenVersion": 2
+		},
+		"node-1691547908439": {
+			"classification": "Transform",
+			"type": "RenameField",
+			"name": "Rename Field",
+			"inputs": [
+				"node-1691547878211"
+			],
+			"sourcePath": "avg(quantidade total de clientes – ccs e scr)",
+			"targetPath": "QuantidadeTotaldeClientes",
+			"generatedNodeName": "RenameField_node1691547908439",
+			"codeGenVersion": 2
+		},
+		"node-1691550874715": {
+			"classification": "Transform",
+			"type": "Recipe",
+			"name": "Data Preparation Recipe",
+			"inputs": [
+				"node-1691547908439"
+			],
+			"recipeReference": {
+				"recipeVersion": "2.0",
+				"recipeArn": "arn:aws:databrew:us-east-1:218606466161:recipe/saida-recipe"
+			},
+			"generatedNodeName": "DataPreparationRecipe_node1691550874715",
+			"codeGenVersion": 2
+		}
+	},
+	"hasBeenSaved": false
+}
